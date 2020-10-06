@@ -17,29 +17,22 @@ library(xlsx)
 
 
 # specifying the path to the 4x terminals used into the dataframe
-Terminals <- data.frame(id = 1:4, TermPath = c("C:/Program Files (x86)/MetaTrader - AxiTrader - Term2/MQL4/Files/",
-                                               "C:/Program Files (x86)/MetaTrader - AxiTrader - Term2/MQL4/Files/",
-                                               "C:/Program Files (x86)/MetaTrader - AxiTrader - Term2/MQL4/Files/",
-                                               "C:/Program Files (x86)/MetaTrader - AxiTrader - Term2/MQL4/Files/"),
+Terminals <- data.frame(id = 1:4, TermPath = c("C:/Program Files (x86)/MT4_Terminal_1/MQL4/Files/",
+                                               "C:/Program Files (x86)/MT4_Terminal_2/MQL4/Files/",
+                                               "C:/Program Files (x86)/MT4_Terminal_3/MQL4/Files/",
+                                               "C:/Program Files (x86)/MT4_Terminal_4/MQL4/Files/"),
                                                
                         stringsAsFactors = F)
 
 # -------------------------------
 # load prices of 28 currencies
 # if file is not found in the terminal sandbox, retrieve it from working directory
-if(!file.exists(file.path(Terminals[2,2], "AI_CP15-14200.csv"))){
-  # retrieve the price data from working directory      
-  prices <- read_csv("AI_CP15-14200.csv", col_names = F)
-  # otherwise get the fresh copy from the terminal sandbox
-} else { prices <- read_csv(file.path(Terminals[2,2], "AI_CP15-14200.csv"), col_names = F)}
+prices <- read_csv(file.path(Terminals[1,2], "AI_CP15-14200.csv"), col_names = FALSE)
 # make the price having proper format
 prices$X1 <- ymd_hms(prices$X1)
 
 # Vector of currency pairs
-Pairs = c("Date", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDCAD", "USDCHF", "USDJPY",
-          "EURGBP", "EURJPY", "EURCHF", "EURNZD", "EURCAD", "EURAUD", "GBPAUD",
-          "GBPCAD", "GBPCHF", "GBPJPY", "GBPNZD", "AUDCAD", "AUDCHF", "AUDJPY",
-          "AUDNZD", "CADJPY", "CHFJPY", "NZDJPY", "NZDCAD", "NZDCHF", "CADCHF")   
+Pairs = c("Date", "AUDUSD", "AUDCHF", "AUDCAD", "AUDNZD")   
 # Rename the column?
 names(prices) <- Pairs
 # -------------------------------
@@ -82,7 +75,7 @@ shinyServer(function(input, output, session) {
   
   #---------------------
   # have a reactive value of the strategy type
-  strategy_analysed <- reactive({ system_analysed() %>% substr(3,4) })
+  strategy_analysed <- reactive({ system_analysed() %>% substr(4,5) })
   
   #---------------------
   # cleaning data and creating relevant statistics
